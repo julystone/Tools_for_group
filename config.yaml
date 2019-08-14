@@ -1,0 +1,9 @@
+---
+# 配置各地址与格式
+txt:
+      path: ./txt/      # 导出的聊天记录放在txt目录下
+      name: 『联盟群』花落闪暖，国服安一.txt
+excel:
+      path: ./          # 生成的excel文件放在当前目录
+      name: All.xlsx
+
