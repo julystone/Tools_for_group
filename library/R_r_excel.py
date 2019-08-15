@@ -59,8 +59,8 @@ class ReadExcel(object):
         self.wb.create_sheet(self.sheet_name, 0)
         self.save()
 
-    def clear_sheet_except_title(self):
-        for row in list(self.sheet.rows)[:0:-1]:
+    def clear_sheet_except_title(self, lines=1):
+        for row in list(self.sheet.rows)[:lines - 1:-1]:
             self.sheet.delete_rows(row[0].row, 1)
         self.save()
 

@@ -66,7 +66,7 @@ def table_init():
     if os.path.exists(EXCEL_PATH):
         print("读取表格中".center(24, "-"))
         fo = ReadExcel(EXCEL_PATH, "Sheet1")
-        fo.clear_sheet_except_title()
+        # fo.clear_sheet_except_title(3)
         return fo
         # 如果表格不存在，新建表格、写表头
     else:
