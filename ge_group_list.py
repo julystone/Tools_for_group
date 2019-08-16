@@ -1,3 +1,8 @@
+"""
+群成员列表生成器
+"""
+
+
 import re
 
 from library.R_r_excel import ReadExcel

@@ -7,3 +7,11 @@ excel:
       path: ./          # 生成的excel文件放在当前目录
       name: All.xlsx
 
+forbiddenWords:         # 配置过滤词
+      - 格式
+      - 是
+
+necessaryWords:         # 配置必须词
+      - 落花
+      - 打卡
+      - 次

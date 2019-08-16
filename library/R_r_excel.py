@@ -31,20 +31,25 @@ class ReadExcel(object):
         self.sheet = self.wb[sheet_name]
         self.max_row = self.sheet.max_row
         self.max_column = self.sheet.max_column
+
+        self.file_name = file_name
+        self.sheet_name = sheet_name
+
+    def __del__(self):
+        self.close()
+
+    def clear_blank_lines(self):
         for row in list(self.sheet.rows)[::-1]:
             if row[0].value is None:
                 self.sheet.delete_rows(row[0].row, 1)
         for column in list(self.sheet.columns)[::-1]:
             if column[0].value is None:
                 self.sheet.delete_cols(column[0].column, 1)
-        self.file_name = file_name
-        self.sheet_name = sheet_name
-
         self.save()
         self.close()
 
-    def __del__(self):
-        self.close()
+    def read_one_cell(self, row, column):
+        return self.sheet.cell(row, column).value
 
     @staticmethod
     def create_new_workbook(filename):
@@ -106,6 +111,40 @@ class ReadExcel(object):
         # 定义一个空列表用来存储所有的用例
         if 'result' not in titles:
             self.w_data(1, self.r_max()[1] + 1, 'result')
+        cases = []
+        for case in rows_data[1:]:
+            # 创建一个Cases类的对象，用来保存用例数据，
+            case_obj = Case()
+            # data用例临时存放用例数据
+            data = []
+            # 判断该单元格是否为字符串类型，
+            for cell in case:
+                data.append(cell.value)
+            # 将该条数据放入cases中
+            case_data = list(zip(titles, data))
+            for i in case_data:
+                if i[0] == 'result' or i[0] is None:
+                    continue
+                setattr(case_obj, i[0], i[1])
+            setattr(case_obj, 'row', case[0].row)
+            cases.append(case_obj)
+
+        return cases
+
+    def read_data_obj_group(self):
+        """
+        按行读取数据，表单所有数据
+        每个用例存储在一个对象中
+        :return: 返回一个列表，列表中每个元素为一个用例对象
+        """
+        self.open()
+        # 按行获取数据转换成列表
+        rows_data = list(self.sheet.rows)[2:]
+        # 获取表单的表头信息
+        titles = []
+        for title in rows_data[0]:
+            titles.append(title.value)
+        # 定义一个空列表用来存储所有的用例
         cases = []
         for case in rows_data[1:]:
             # 创建一个Cases类的对象，用来保存用例数据，
@@ -195,7 +234,7 @@ class ReadExcel(object):
                 case_all.append(dict(zip(titles, case_one)))
         return case_all
 
-    def r_data_obj_from_column(self, list1):
+    def r_data_obj_from_column(self, list1, title_line=1):
         """
         按list中行读取，表单所有该行数据
         每个用例存储在一个对象中
@@ -209,12 +248,16 @@ class ReadExcel(object):
         case_all = []
         for row in range(1, self.sheet.max_row + 1):
             case_one = []
-            if row == 1:
+            if row < title_line:
+                continue
+            elif row == title_line:
                 for column in list1:
                     titles.append(self.sheet.cell(row, column).value)
+                titles.append("row")
             else:
                 for column in list1:
                     case_one.append(self.sheet.cell(row, column).value)
+                case_one.append(row)
                 cases = namedtuple('Cases', titles)
                 case_obj = cases(*case_one)
                 case_all.append(case_obj)
