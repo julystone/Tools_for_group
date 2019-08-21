@@ -5,13 +5,11 @@ txt:
       name: 『联盟群』花落闪暖，国服安一.txt
 excel:
       path: ./          # 生成的excel文件放在当前目录
-      name: All.xlsx
+      name: 落花-统计打卡.xlsx
+      sheet: 8.19-8.25
 
 forbiddenWords:         # 配置过滤词
       - 格式
-      - 是
 
 necessaryWords:         # 配置必须词
-      - 落花
       - 打卡
-      - 次
