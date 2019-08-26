@@ -10,6 +10,7 @@ excel:
 
 forbiddenWords:         # 配置过滤词
       - 格式
+      - Q群管家
 
 necessaryWords:         # 配置必须词
       - 打卡
