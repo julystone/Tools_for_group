@@ -1,23 +1,28 @@
 import xlwings as xw
 
 
-# app = xw.App(visible=True, add_book=False)
+class MyDict(dict):
+    __setattr__ = dict.__setitem__
+    __getattr__ = dict.__getitem__
 
-# app.display_alerts = False
-# app.screen_updating = False
+    def __getitem__(self, key):
+        if key in self.keys():
+            dict.__getitem__(self, key)
+        else:
+            r = MyDict()
+            # self.__setattr__[key] = r
+            self.key = r
+            # self.__setitem__(key, r)
+            return r
 
-# wb = xw.Book("落花-统计打卡.xlsx")
-# wb = xw.Book()
-#
-# wb.save("temp.xlsx")
-#
-# wb.close()
 
-
-# app.quit()
-#
-class Case:
-    pass
+def dict_to_object(dict_obj):
+    if isinstance(dict_obj, dict) is False:
+        return dict_obj
+    inst = MyDict()
+    for k, v in dict_obj.items():
+        inst[k] = dict_to_object(v)
+    return inst
 
 
 class OperatingExcel:
@@ -27,6 +32,8 @@ class OperatingExcel:
         # self.app = xw.App(visible=True, add_book=False)
         self.wb = self.app.books.open(filepath)
         self.sheet = self.wb.sheets[sheetname]
+        self.max_row = self.sheet.used_range.last_cell.row
+        self.max_column = self.sheet.used_range.last_cell.column
 
     def __del__(self):
         self.wb.save()
@@ -55,58 +62,70 @@ class OperatingExcel:
         self.sheet.autofit(type)
         # self.sheet.shapes[0]
 
-    def read_obj(self):
-        titles = []
+    def read_titles(self, deep_sides):
+        all_title = []
         temp_value = None
-        for rng in self.sheet.range("1:1"):
-            if not rng.value and not rng.api.MergeCells:
+        for title_row in range(1, deep_sides + 1):
+            contents = []
+            for rng in self.sheet.range(f"{title_row}:{title_row}"):
+                if rng.column > self.max_column:
+                    break
+                if rng.value:
+                    temp_value = rng.value
+                contents.append(temp_value)
+            all_title.append(contents)
+        return all_title
+
+    def read_one_line(self, row):
+        contents = []
+        for rng in self.sheet.range(f"{row}:{row}"):
+            if rng.column > self.max_column:
                 break
-            if rng.value:
-                temp_value = rng.value
-            titles.append(temp_value)
-        print(titles)
-        second_titles = []
-        for rng in self.sheet.range("2:2"):
-            if not rng.value and not rng.api.MergeCells:
-                break
-            if rng.value:
-                temp_value = rng.value
-            second_titles.append(temp_value)
-        print(second_titles)
+            contents.append(rng.value)
+        return contents
 
+    # dict_all.ff(123).ff(456).ff(456)
 
-        # rows_data = self.sheet.last_cell.value
-        # print(rows_data.value)
-        # titles = []
-        # for title in rows_data[0]:
-        #     titles.append(title)
-        # cases = []
-        # for case in rows_data[1:]:
-        #     # 创建一个Cases类的对象，用来保存用例数据，
-        #     case_obj = Case()
-        #     # data用例临时存放用例数据
-        #     data = []
-        #     for cell in case:
-        #         data.append(cell)
-        #     case_data = list(zip(titles, data))
-        #     for i in case_data:
-        #         if i[0] == 'result' or i[0] is None:
-        #             continue
-        #         setattr(case_obj, i[0], i[1])
-        #     setattr(case_obj, 'row', case[0].row)
-        #     cases.append(case_obj)
-
-        # print(titles)
-        # print(cases[0].日期)
-        # return cases
+    def read_data(self):
+        title_deep_sides = 2
+        all_cases = []
+        all_title = self.read_titles(title_deep_sides)
+        for data_row in range(title_deep_sides + 1, self.max_row + 1):
+            data = self.read_one_line(data_row)
+            dict_all = MyDict()
+            zip_tuple = list(zip(*all_title, data))
+            string = "dict_all"
+            for _ in range(title_deep_sides):
+                string += f".ff(item[{_}])"
+            string += f" = item[{_ + 1}]"
+            for item in zip_tuple:
+                try:
+                    print(dict_all[item[0]])
+                    print(dict_all[item[0]][item[1]])
+                    dict_all[item[0]][item[1]] = item[2]
+                    # exec(string)
+                except KeyError:
+                    dict_all[item[0]] = {}
+                    exec(string)
+            res = dict_to_object(dict_all)
+            all_cases.append(res)
+        for index, value in enumerate(all_cases):
+            value.row = title_deep_sides + 1
+        print(all_cases)
 
     def read_excel(self):
         rows_data = self.sheet.range("A1").expand().value
         print(rows_data)
 
-o1 = OperatingExcel("./ALL.xlsx", "Sheet1")
+    @staticmethod
+    def get_value(di, ke):
+        return di[ke]
+
+
+o1 = OperatingExcel("./ALL_4.xlsx", "Sheet1")
 # o1.clear_sheet()
-# o1.w_data("A1:A10", ["aaaaaaaaaaaaaaa", "bbb", "ccc", "aaaaaaaaaaaaaaa", "bbb", "ccc", "aaaaaaaaaaaaaaa", "bbb", "ccc"])
 # o1.sheet_autofit()
-o1.read_obj()
-# o1.read_excel()
+o1.read_data()
+# fff = MyDict()
+# fff["1"]
+# print(fff)
