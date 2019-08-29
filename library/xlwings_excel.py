@@ -1,7 +1,7 @@
 import xlwings as xw
 
 
-class OperatingExcel:
+class FormattingExcel:
     """
     ColorIndex: 0:无色,   3:红色,   36:黄色,   8:蓝色
     """

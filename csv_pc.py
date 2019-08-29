@@ -1,16 +1,13 @@
-s0 = "abcacde"
-s1 = "abcacdeb"
-s2 = "abcacdee"
+from dateutil import rrule, parser
 
-set_temp = set()
+# Origin_Date = "2019-08-06 23:49:00"
+# Test_Date = "2019-08-08 00:00:00"
+#
+# Trun_Date = lambda string: time.strptime(string, "%Y-%m-%d %H:%M:%S").tm_yday
+# ydate = Trun_Date(str(Origin_Date))
+#
+# print(Trun_Date(str(Test_Date)) - Trun_Date(str(Origin_Date)))
 
-li = []
-
-for index, value in enumerate(s2):
-    if value not in set_temp:
-        li.append(value)
-    else:
-        li.remove(value)
-    set_temp.add(value)
-
-print(li[0], s2.index(li[0]))
+res = rrule.rrule(rrule.DAILY, dtstart=parser.parse('2019-08-06 23:49:00'),
+                  until=parser.parse('2019-08-07 23:48:59')).count()
+print(res)
