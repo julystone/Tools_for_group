@@ -6,7 +6,7 @@ txt:
 excel:
       path: ./          # 生成的excel文件放在当前目录
       name: 落花-统计打卡.xlsx
-      sheet: 8.19-8.25
+      sheet: 8.26-9.1
 
 forbiddenWords:         # 配置过滤词
       - 格式
