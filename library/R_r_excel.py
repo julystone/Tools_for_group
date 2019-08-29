@@ -277,6 +277,12 @@ class ReadExcel(object):
         self.save()
         self.close()
 
+    def w_data_line(self, data_list):
+        self.open()
+        self.sheet.append(data_list)
+        self.save()
+        self.close()
+
     def set_column_width(self, column, width):
         self.sheet.column_dimensions[column].width = width
         self.save()
@@ -301,7 +307,7 @@ class ReadExcel(object):
 
 
 if __name__ == '__main__':
-    r = ReadExcel('../data/api_test2.xlsx', 'userRegister')
+    r = ReadExcel('./r.xlsx', 'sheet')
     # print('---------------------------------------------------')
     # data = r.r_data_from_colunm([1, 2, 3])
     # print(data)
@@ -316,4 +322,5 @@ if __name__ == '__main__':
     # r.sheet.column_dimensions["A"].font = FONT
     # r.set_font("A3", FONT)
     # r.save()
-    ReadExcel.create_new_workbook("july.xlsx")
+    # ReadExcel.create_new_workbook("july.xlsx")
+    r.w_data_line(['xxxx', 'vvvv', 'bhbbbb'])
