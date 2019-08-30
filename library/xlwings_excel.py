@@ -89,10 +89,12 @@ class FormattingExcel:
 
 
 if __name__ == '__main__':
-    o1 = OperatingExcel("./ALL_4.xlsx", "Sheet1")
-    res = o1.read_data(3)
+    o1 = FormattingExcel("./ALL_4.xlsx", "Sheet1")
+    # res = o1.read_data(3)
     # o1.w_data("A1:A10", [1, 2, 3333, 4, 5], if_vertical=True)
-    # o1.set_font("D3:F3", font_dict)
+    font_dict = {"Size": "12",
+                 "Color": "3"}
+    o1.set_font("D3:F3", font_dict)
     # fff = MyDict()
     # fff["1"]
     # print(fff)
