@@ -22,6 +22,9 @@ class OperatingExcelPd:
         self.max_row = self.dp.shape[0]
         self.max_column = self.dp.shape[1]
 
+    def new_line(self, append_list):
+        self.dp = self.dp.append(append_list, ignore_index=True)
+
     def write_in(self, pattern, content):
         string = f"self.dp.loc[dp.{pattern[0]} == '{pattern[1]}', '{content[0]}'] = {content[1]}"
         exec(string)
