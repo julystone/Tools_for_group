@@ -1,3 +1,0 @@
-common,,,,,,,,req,,,,,,,,,,,,res,,,
-case_id,case_name,table_name,method,sql,req,rsp,result,Table,UserNo,AuthCode,Action,Name,Price,Unit,Description,Thumbnail,Images,Version,Remarks,ErrorCode,ErrorText,PluginNo,Count
-34,Images-添加三张图片,Goods_Plugin,post,,"{""JsonReqHead"": {""Table"": ""Goods_Plugin"", ""UserNo"": ""#UserNo#"", ""AuthCode"": ""#AuthCode#"", ""Action"": ""A""}, ""JsonReqData"": {""Name"": ""皮肤插件"", ""Price"": 527, ""Unit"": ""元/年"", ""Description"": ""测试添加成功"", ""Version"": ""1.1.33""}}","{""JsonRspHead"": {""ErrorCode"": 0}, ""JsonRspData"": {}}",!!!Failed!!!,Goods_Plugin,#UserNo#,#AuthCode#,A,皮肤插件,527,元/年,测试添加成功,,#pic1#,1.1.33,,0,,,
